@@ -126,12 +126,18 @@ exports.getall = async (req, res) => {
 exports.update = async (req, res) => {
   // console.log(req.body.role, req.params._id);
   const filter = { _id: req.params.id };
-  const role = req.body.role;
   console.log(filter);
+  const role = req.body.role;
+  console.log(filter, role);
 
   try {
-    const result = await Login.findOneAndUpdate(filter, { role: role });
-    res.status(200).send({ user: result });
+    const result = await Login.findOneAndUpdate(
+      filter,
+      { $set: { role } },
+      { returnDocument: "after" }
+    );
+    console.log(result);
+    res.status(200).send({ success: true, user: result });
   } catch (err) {
     console.log(err);
     res.status(400).send({ success: false, msg: err });
